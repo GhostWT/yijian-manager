@@ -3,7 +3,7 @@
     <transition name="form-fade" mode="in-out">
       <section class="form_contianer">
         <div class="manage_tip">
-          <p>毅健后台管理系统</p>
+          <p>商家后台管理系统</p>
         </div>
         <el-form ref="loginForm">
           <el-form-item>
