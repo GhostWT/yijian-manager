@@ -27,7 +27,7 @@
       return {
         storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         tableData: [],
-        imgUrl: ''
+        imgUrl: this.$store.getters.getImgUrl
       }
     },
     mounted() {
