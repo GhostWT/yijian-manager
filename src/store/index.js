@@ -1,32 +1,31 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
+let store = new Vuex.Store({
+    state: {
+      storeInfo: window.localStorage.getItem('storeInfo')
+    },
 
-const state = {
-  adminInfo: {
-    avatar: 'default.jpg'
-  },
-}
-
-const mutations = {
-  saveAdminInfo(state, adminInfo){
-    state.adminInfo = adminInfo;
-  }
-}
-
-const actions = {
-  async getAdminData({commit}){
-    try{
-      commit('saveAdminInfo', 'ts');
-    }catch(err){
-      console.log('您尚未登陆或者session失效')
+    getters: {
+      getStoreInfo(state) {
+        return state.storeInfo;
+      }
     }
-  }
-}
+    ,
+    actions: {
+      setStoreInfo({commit, state}, info) {
+        commit("setStoreInfo", info);
+        window.localStorage.setItem("storeInfo", info);
+      }
+    }
+    ,
+    mutations: {
+      setStoreInfo(state, info) {
+        state.storeInfo = info;
+      }
+    }
+  })
+;
 
-export default new Vuex.Store({
-  state,
-  actions,
-  mutations,
-})
+export default store;

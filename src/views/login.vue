@@ -26,22 +26,23 @@
     name: "login",
     data() {
       return {
-        username:'',
-        password:''
+        username: '',
+        password: ''
       }
     },
     methods: {
-      submitForm(){
-        let mobile=this.username;
-        let password=this.password;
-        let url='/yijian/opStore/storeLogin.do';
-        let data={
+      submitForm() {
+        let mobile = this.username;
+        let password = this.password;
+        let url = '/yijian/opStore/storeLogin.do';
+        let data = {
           mobile,
           password
         };
         this.$axios.dopost(url, data).then(res => {
+          this.$store.dispatch('setStoreInfo', JSON.stringify(res));
           this.$router.push({
-            name:'bannermanage'
+            name: 'bannermanage'
           });
         }).catch(e => {
           this.$showErrorMessage(this, e);
