@@ -7,10 +7,10 @@
         </div>
         <el-form ref="loginForm">
           <el-form-item>
-            <el-input placeholder="用户名"></el-input>
+            <el-input placeholder="用户名" v-model="username"></el-input>
           </el-form-item>
-          <el-form-item prop="password">
-            <el-input type="password" placeholder="密码"></el-input>
+          <el-form-item>
+            <el-input type="password" placeholder="密码" v-model="password"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" class="submit_btn" @click="submitForm">登陆</el-button>
@@ -25,17 +25,27 @@
   export default {
     name: "login",
     data() {
-      return {}
+      return {
+        username:'',
+        password:''
+      }
     },
-    mounted() {
-
-    },
-    computed: {},
     methods: {
       submitForm(){
-        this.$router.push({
-          name:'registermanage'
-        });
+        let mobile=this.username;
+        let password=this.password;
+        let url='/yijian/opStore/storeLogin.do';
+        let data={
+          mobile,
+          password
+        };
+        this.$axios.dopost(url, data).then(res => {
+          this.$router.push({
+            name:'bannermanage'
+          });
+        }).catch(e => {
+          this.$showErrorMessage(this, e);
+        })
       }
     },
     watch: {}
