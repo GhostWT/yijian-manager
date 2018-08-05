@@ -3,8 +3,8 @@
     <div class="header-top">
       <el-form :inline="true" :model="searchData" class="demo-form-inline">
         <el-row>
-          <el-form-item label="商家ID">
-            <el-input v-model="searchData.storeID" placeholder="请输入商家ID"></el-input>
+          <el-form-item label="用户ID">
+            <el-input v-model="searchData.userID" placeholder="请输入用户ID"></el-input>
           </el-form-item>
           <el-form-item label="手机号">
             <el-input v-model="searchData.telphone" placeholder="请输入手机号"></el-input>
@@ -36,63 +36,135 @@
         border
         :header-cell-style="headerStyle"
         style="width: 100%;text-align:center">
-        <el-table-column prop="monitorDynamicRegisterCount" label="用户ID"></el-table-column>
-        <el-table-column prop="monitorDynamicAuthInfoCount" label="手机号"></el-table-column>
-        <el-table-column prop="monitorDynamicAuthBankCount" label="昵称"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyCount" label="订单编号"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyPCT" label="状态"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyPCT" label="订单生成时间"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyPCT" label="操作">
+        <el-table-column prop="userId" label="用户ID"></el-table-column>
+        <el-table-column prop="mobile" label="手机号"></el-table-column>
+        <el-table-column prop="name" label="昵称"></el-table-column>
+        <el-table-column prop="appointId" label="订单编号"></el-table-column>
+        <el-table-column prop="appointStatus" label="状态">
+          <template slot-scope="scope">{{scope.row.appointStatus | statusFilter}}</template>
+        </el-table-column>
+        <el-table-column prop="requestTime" label="订单生成时间"></el-table-column>
+        <el-table-column prop="appointStatus" label="操作">
           <template slot-scope="scope">
+            <el-button @click="submitLeave(scope.row)" type="text" size="small" v-if="scope.row.appointStatus == 2">已离店</el-button>
             <el-button @click="handleClick(scope.row)" type="text" size="small">查看订单详情</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-
+    <el-dialog title="订单详情" :visible.sync="centerDialogVisible" width="30%" center>
+      <p><span>订单编号:</span><span>{{alertData.appoint.appointId}}</span></p>
+      <p><span>订单生成时间:</span><span>{{alertData.appoint.requestTime}}</span></p>
+      <p><span>商家:</span><span>{{alertData.store.name}}</span></p>
+      <p><span>商家地址:</span><span>{{alertData.store.address}}</span></p>
+      <p><span>预约时间:</span><span>{{alertData.appoint.appointStartTime}}</span></p>
+      <p><span>商家电话:</span><span>{{alertData.store.phone}}</span></p>
+      <p><span>单价:</span><span>{{alertData.store.price}}</span></p>
+      <p><span>最低消费:</span><span>{{alertData.store.minConsumption}}</span></p>
+      <p><span>用户昵称:</span><span>{{alertData.user.name}}</span></p>
+      <p><span>手机号:</span><span>{{alertData.user.mobile}}</span></p>
+      <p><span>订单状态:</span><span>{{alertData.appoint.appointStatus | statusFilter}}</span></p>
+      <p><span>实际健身时间:</span><span>{{[alertData.appoint.actualStartTime,alertData.appoint.actualEndTime,false] | timeFilter}}</span></p>
+      <p><span>计费时间:</span><span>{{[alertData.appoint.appointStartTime,alertData.appoint.actualEndTime,true] | timeFilter}}</span></p>
+      <p><span>预付款:</span><span>{{alertData.appoint.appointCost | coastFilter}}</span></p>
+      <p><span>取消预约退还费用:</span><span>{{alertData | backMoneyFilter}}</span></p>
+      <p><span>超出预付款支付费用:</span><span>{{[alertData.appoint.actualCost,alertData.appoint.appointCost] | overPayPrice}}</span></p>
+      <p><span>实际交易金额:</span><span>{{alertData.appoint.actualCost | coastFilter}}</span></p>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import {getBeforeDays} from "../utils/mUtils";
+
   export default {
     name: "OrderManage",
     data() {
       return {
+        storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         searchData: {
-          storeID: '',
+          userID: '',
           telphone: '',
           userName: '',
           statusList: [{
-            key: '0',
+            key: 9,
             value: '全部'
           }, {
-            key: '1',
+            key: 1,
             value: '待参加'
           }, {
-            key: '2',
+            key: 2,
             value: '进行中'
           }, {
-            key: '3',
+            key: 3,
+            value: '已完成'
+          }, {
+            key: 4,
             value: '已取消'
           }, {
-            key: '3',
-            value: '已取消'
-          }, {
-            key: '3',
-            value: '已取消'
+            key: 7,
+            value: '待支付'
           }],
-          orderStatus: '0',
+          orderStatus: 9,
           searchDate: ''
         },
-        tableData: []
+        tableData: [],
+        total: 5,
+        currentPage: 1,
+        centerDialogVisible:false,
+        alertData:{appoint:{},user:{},store:{}}
       }
     },
     mounted() {
       this.searchData.searchDate = [getBeforeDays(7), new Date()];
+      this.queryData();
     },
     methods: {
       queryData() {
-
+        let url = '/yijian/opStore/getAppointList.do';
+        let data = {
+          storeId: this.storeInfo.storeId,
+          userId: this.searchData.userID ? +this.searchData.userID : 0,
+          mobile: this.searchData.telphone,
+          userName: this.searchData.userName,
+          status: this.searchData.orderStatus,
+          startIndex: this.currentPage == 1 ? 0 : this.currentPage * 10 - 1,
+          pageSize: 10,
+          requestTimeStart: this.$transferDate(this.searchData.searchDate[0]),
+          requestTimeEnd: this.$transferDate(this.searchData.searchDate[1])
+        };
+        this.$axios.dopost(url, data).then(res => {
+          res = [
+            {
+              "requestTime": "2018-08-04 11:03:13",
+              "mobile": "13656692384",
+              "name": "LOLO",
+              "appointId": 269,
+              "userId": 68,
+              "appointStatus": 2
+            },
+            {
+              "requestTime": "2018-08-03 11:24:47",
+              "mobile": "13656692384",
+              "name": "LOLO",
+              "appointId": 267,
+              "userId": 68,
+              "appointStatus": 3
+            },
+            {
+              "requestTime": "2018-07-30 21:12:40",
+              "mobile": "15897809567",
+              "name": "余文乐",
+              "appointId": 223,
+              "userId": 46,
+              "appointStatus": 3
+            }
+          ]
+          this.tableData = res;
+          this.total = res.length > 0 ? res.length : 1;
+        }).catch(e => {
+          this.$showErrorMessage(this, e);
+        })
       },
       headerStyle: function () {
         return {
@@ -102,7 +174,91 @@
         }
       },
       handleClick(d) {
+        let appointId = d.appointId;
+        let url = '/yijian/opStore/getAppointDetail.do';
+        let data = {appointId};
+        this.$axios.dopost(url, data).then(res => {
+          this.alertData = res;
+          this.centerDialogVisible = true;
+        }).catch(e => {
+          this.$showErrorMessage(this, e);
+        })
+      },
+      submitLeave(d) {
+        this.$confirm('确认该用户已离店吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({value}) => {
+          let url = '/yijian/opStore/finishAppointByStore.do';
+          let appointId = d.appointId;
+          let data = {
+            appointId
+          };
+          this.$axios.dopost(url, data).then(res => {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+            this.queryData();
+          }).catch(e => {
+            this.$showErrorMessage(this, e);
+          })
+        }).catch(() => {
 
+        });
+      }
+    },
+    filters: {
+      statusFilter(n) {
+        if (n == 1) {
+          return '待参加';
+        }
+        if (n == 2) {
+          return '进行中';
+        }
+        if (n == 3) {
+          return '已完成';
+        }
+        if (n == 4) {
+          return '已取消';
+        }
+        if (n == 7) {
+          return '待支付';
+        }
+      },
+      backMoneyFilter(d) {
+        if (d && d.appoint && d.appoint.appointStatus == 4) {
+          // 如果取消时间小于预约时间一小时及以上，则为price，否则为零
+          let nTime = Date.parse(new Date());
+          let appointTime = d.appoint.appointStartTime ? Date.parse(new Date(d.appoint.appointStartTime)) : '';
+          if (appointTime) {
+            let minsTime = appointTime - nTime;
+            let temp = 1000 * 60 * 60;
+            if (minsTime > temp) {
+              return "¥ " + d.appoint.price;
+            } else {
+              return "¥ 0.0";
+            }
+          } else {
+            return "¥ 0.0";
+          }
+        } else {
+          return "¥ 0.0";
+        }
+      },
+      overPayPrice([a, b]) {
+        if (a && b) {
+          return "¥ " + (a - b);
+        } else {
+          return "¥ 0.0"
+        }
+      },
+      coastFilter(a) {
+        if (a) {
+          return "¥ " + a;
+        } else {
+          return "¥ 0.0"
+        }
       }
     }
   }
