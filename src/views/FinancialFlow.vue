@@ -3,13 +3,7 @@
     <div class="header-top">
       <el-form :inline="true" :model="searchData" class="demo-form-inline">
         <el-row>
-          <el-form-item label="订单编号">
-            <el-input v-model="searchData.orderID" placeholder="请输入订单编号"></el-input>
-          </el-form-item>
-          <el-form-item label="店名">
-            <el-input v-model="searchData.storeName" placeholder="请输入店名"></el-input>
-          </el-form-item>
-          <el-form-item label="订单结算日期">
+          <el-form-item label="交易时间">
             <el-date-picker class="date-picker-width" v-model="searchData.searchDate" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
@@ -26,17 +20,14 @@
         border
         :header-cell-style="headerStyle"
         style="width: 100%;text-align:center">
-        <el-table-column prop="monitorDynamicRegisterCount" label="商家ID"></el-table-column>
-        <el-table-column prop="monitorDynamicAuthInfoCount" label="店名"></el-table-column>
-        <el-table-column prop="monitorDynamicAuthBankCount" label="联系人"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyCount" label="申请人"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyPCT" label="状态"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyPCT" label="申请时间"></el-table-column>
-        <el-table-column prop="monitorDynamicApplyPCT" label="操作">
-          <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看商家信息</el-button>
-          </template>
+        <el-table-column prop="outTradeNo" label="订单编号"></el-table-column>
+        <el-table-column prop="name" label="用户昵称"></el-table-column>
+        <el-table-column prop="mobile" label="手机号"></el-table-column>
+        <el-table-column prop="price" label="结算金额"></el-table-column>
+        <el-table-column label="实收金额">
+          <template slot-scope="scope">{{scope.row.price-scope.row.profit}}</template>
         </el-table-column>
+        <el-table-column prop="payDate" label="结算时间"></el-table-column>
       </el-table>
     </div>
 
@@ -44,24 +35,46 @@
 </template>
 
 <script>
+  import {getBeforeDays} from "../utils/mUtils";
+
   export default {
     name: "FinancialFlow",
     data() {
       return {
+        storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         searchData: {
-          orderID: '',
-          storeName: '',
           searchDate: ''
         },
-        tableData: []
+        tableData: [],
+        total: 5,
+        currentPage: 1
       }
     },
     mounted() {
       this.searchData.searchDate = [getBeforeDays(7), new Date()];
+      this.queryData();
     },
     methods: {
       queryData() {
-
+        let url = '/yijian/opRoot/findServiceFlow.do';
+        let storeId = this.storeInfo.storeId,
+          startIndex = this.currentPage == 1 ? 0 : this.currentPage * 10 - 1,
+          pageSize = 10,
+          createTimeStart = this.$transferDate(this.searchData.searchDate[0]),
+          createTimeEnd = this.$transferDate(this.searchData.searchDate[1]);
+        let data = {
+          storeId,
+          startIndex,
+          pageSize,
+          createTimeStart,
+          createTimeEnd
+        };
+        this.$axios.dopost(url, data).then(res => {
+          this.tableData = res;
+          this.total = res.length > 0 ? res.length : 1;
+        }).catch(e => {
+          this.$showErrorMessage(this, e);
+        })
       },
       headerStyle: function () {
         return {
@@ -70,8 +83,13 @@
           "text-align": "center"
         }
       },
-      handleClick(d) {
-
+      handleCurrentChange(val) {
+        this.currentPage = val;
+      }
+    },
+    watch: {
+      currentPage() {
+        this.queryData();
       }
     }
   }
