@@ -46,6 +46,7 @@
         storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         tableData: [],
         imageUrl: '',
+        realImageUrl: '',
         imgUrl: this.$store.getters.getImgUrl,
         centerDialogVisible: false,
         serverUrl: '/yijian/upload'
@@ -77,11 +78,25 @@
         this.centerDialogVisible = true;
         this.imageUrl = this.imgUrl + d.image;
       },
-      handleClick(d) {
-
+      handleClick() {
+        let url = '/yijian/opStore/updateStoreBanner.do';
+        let storeId = this.storeInfo.storeId;
+        let image = this.realImageUrl;
+        let data = {
+          storeId,
+          image
+        };
+        this.$axios.dopost(url, data).then(res => {
+          this.centerDialogVisible = false;
+          this.$message.success('修改成功');
+          this.queryData();
+        }).catch(e => {
+          this.$showErrorMessage(this, e);
+        })
       },
       handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+        this.realImageUrl = res.body;
+        this.imageUrl = this.imgUrl + this.realImageUrl;
       },
       beforeAvatarUpload(file) {
 
