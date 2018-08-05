@@ -134,32 +134,6 @@
           requestTimeEnd: this.$transferDate(this.searchData.searchDate[1])
         };
         this.$axios.dopost(url, data).then(res => {
-          res = [
-            {
-              "requestTime": "2018-08-04 11:03:13",
-              "mobile": "13656692384",
-              "name": "LOLO",
-              "appointId": 269,
-              "userId": 68,
-              "appointStatus": 2
-            },
-            {
-              "requestTime": "2018-08-03 11:24:47",
-              "mobile": "13656692384",
-              "name": "LOLO",
-              "appointId": 267,
-              "userId": 68,
-              "appointStatus": 3
-            },
-            {
-              "requestTime": "2018-07-30 21:12:40",
-              "mobile": "15897809567",
-              "name": "余文乐",
-              "appointId": 223,
-              "userId": 46,
-              "appointStatus": 3
-            }
-          ]
           this.tableData = res;
           this.total = res.length > 0 ? res.length : 1;
         }).catch(e => {
