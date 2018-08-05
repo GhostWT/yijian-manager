@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="header">
     <el-table
       :data="tableData"
       border
@@ -109,41 +109,42 @@
 
 <style lang="less" scoped>
 
-  .imageWidth{
-    max-width: 500px;
-  }
-  .el-dialog {
-    .inner_body {
-      text-align: center;
-      .avatar {
+  .header {
+    margin: 20px;
+    .el-dialog {
+      .inner_body {
+        text-align: center;
+        .avatar {
+          width: 178px;
+        }
+      }
+      .avatar-uploader {
         width: 178px;
+        height: 178px;
+        display: inline-block;
+        vertical-align: top;
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+      .avatar-uploader:hover {
+        border-color: #409EFF;
+      }
+      .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
       }
     }
-    .avatar-uploader {
-      width: 178px;
-      height: 178px;
-      display: inline-block;
-      vertical-align: top;
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+    .imageWidth {
+      max-width: 500px;
     }
-
-    .avatar-uploader:hover {
-      border-color: #409EFF;
-    }
-
-    .avatar-uploader-icon {
-      font-size: 28px;
-      color: #8c939d;
-      width: 178px;
-      height: 178px;
-      line-height: 178px;
-      text-align: center;
-    }
-
   }
+
 
 </style>
