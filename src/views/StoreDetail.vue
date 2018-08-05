@@ -107,10 +107,8 @@
         this.$message.error('图片插入失败')
       },
       onEditorReady(editor) {
-        console.log('editor ready!', editor)
       },
       onEditorChange(d) {
-        console.log(d);
       },
       queryData() {
         let url = '/yijian/opStore/getStoreDescripe.do';
