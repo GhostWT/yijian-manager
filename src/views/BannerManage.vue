@@ -6,9 +6,9 @@
       :header-cell-style="headerStyle"
       style="width: 100%;text-align:center">
       <el-table-column prop="bannerId" label="排序值"></el-table-column>
-      <el-table-column prop="image" label="图片">
+      <el-table-column prop="image" label="图片" width="600">
         <template slot-scope="scope">
-          <img v-bind:src="imgUrl+scope.row.image"/>
+          <img v-bind:src="imgUrl+scope.row.image" class="imageWidth"/>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -47,6 +47,7 @@
         tableData: [],
         imageUrl: '',
         realImageUrl: '',
+        bannerId: '',
         imgUrl: this.$store.getters.getImgUrl,
         centerDialogVisible: false,
         serverUrl: '/yijian/upload'
@@ -77,13 +78,14 @@
       modify(d) {
         this.centerDialogVisible = true;
         this.imageUrl = this.imgUrl + d.image;
+        this.bannerId = d.bannerId;
       },
       handleClick() {
         let url = '/yijian/opStore/updateStoreBanner.do';
-        let storeId = this.storeInfo.storeId;
+        let bannerId = this.bannerId;
         let image = this.realImageUrl;
         let data = {
-          storeId,
+          bannerId,
           image
         };
         this.$axios.dopost(url, data).then(res => {
@@ -107,6 +109,9 @@
 
 <style lang="less" scoped>
 
+  .imageWidth{
+    max-width: 500px;
+  }
   .el-dialog {
     .inner_body {
       text-align: center;
