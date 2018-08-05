@@ -14,6 +14,7 @@
       </quill-editor>
     </div>
     <div class="submit_btn">
+      <el-button type="primary" @click="inEdit = false" v-if="inEdit">取消</el-button>
       <el-button type="primary" @click="submit" v-if="inEdit">保存</el-button>
       <el-button type="primary" @click="inEdit = true" v-if="!inEdit">编辑</el-button>
     </div>
