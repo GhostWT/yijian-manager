@@ -13,10 +13,28 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
+          <el-button @click="modify(scope.row)" type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog title="编辑" :visible.sync="centerDialogVisible" width="40%" center>
+      <div class="inner_body">
+        <span>添加或更换图片：</span>
+        <el-upload
+          class="avatar-uploader"
+          :action="serverUrl"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleClick">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -27,7 +45,10 @@
       return {
         storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         tableData: [],
-        imgUrl: this.$store.getters.getImgUrl
+        imageUrl: '',
+        imgUrl: this.$store.getters.getImgUrl,
+        centerDialogVisible: false,
+        serverUrl: '/yijian/upload'
       }
     },
     mounted() {
@@ -52,13 +73,57 @@
           "text-align": "center"
         }
       },
+      modify(d) {
+        this.centerDialogVisible = true;
+        this.imageUrl = this.imgUrl + d.image;
+      },
       handleClick(d) {
+
+      },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
 
       }
     }
   }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+
+  .el-dialog {
+    .inner_body {
+      text-align: center;
+      .avatar {
+        width: 178px;
+      }
+    }
+    .avatar-uploader {
+      width: 178px;
+      height: 178px;
+      display: inline-block;
+      vertical-align: top;
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-uploader:hover {
+      border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
+      text-align: center;
+    }
+
+  }
 
 </style>
