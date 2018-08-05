@@ -117,6 +117,7 @@
         let data = {storeId};
         this.$axios.dopost(url, data).then(res => {
           this.storeDetail = res.description;
+          this.content = res.description;
         }).catch(e => {
           this.$showErrorMessage(this, e);
         })
