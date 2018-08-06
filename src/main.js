@@ -112,6 +112,15 @@ Vue.filter('timeFilter', function ([a, b, c]) {
   }
 })
 
+Vue.prototype.getImgHtml = function ([images, url]) {
+  let imgArr = JSON.parse(images);
+  let html = '';
+  for (let i = 0; i < imgArr.length; i++) {
+    html += '<img src=\'' + url + imgArr[i] + '\'' + ' style=\'width:50px;margin-left: 10px;\' >';
+  }
+  return html;
+};
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
