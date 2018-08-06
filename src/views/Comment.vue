@@ -106,44 +106,6 @@
           endTime: this.$transferDate(this.searchData.searchDate[1])
         };
         this.$axios.dopost(url, data).then(res => {
-          res= [
-            {
-              "evaluationId": 8,
-              "image": "[\"1533134158546file\",\"1533134175805file\"]",
-              "waiterStar": 5,
-              "equipmentStar": 2,
-              "createTime": "2018-08-01 22:36:19",
-              "name": "大白菜",
-              "mobile": "17681893248",
-              "message": "123123",
-              "environmentStar": 4,
-              "status": 1
-            },
-            {
-              "evaluationId": 9,
-              "image": "[\"1533135721917file\"]",
-              "waiterStar": 0,
-              "equipmentStar": 2,
-              "createTime": "2018-08-01 23:02:05",
-              "name": "大白菜",
-              "mobile": "17681893248",
-              "message": "3213",
-              "environmentStar": 4,
-              "status": 1
-            },
-            {
-              "evaluationId": 10,
-              "image": "[\"1533136415658file\"]",
-              "waiterStar": 5,
-              "equipmentStar": 3,
-              "createTime": "2018-08-01 23:13:36",
-              "name": "大白菜",
-              "mobile": "17681893248",
-              "message": "3213",
-              "environmentStar": 4,
-              "status": 1
-            }
-          ];
           this.tableData = res;
           this.total = res.length > 0 ? res.length : 1;
         }).catch(e => {
