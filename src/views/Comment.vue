@@ -49,7 +49,8 @@
         <el-table-column prop="createTime" label="评论时间" width="120"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看订单详情</el-button>
+            <el-button @click="handleClick(scope.row,true)" type="text" size="small" v-if="scope.row.status==1">屏蔽</el-button>
+            <el-button @click="handleClick(scope.row,false)" type="text" size="small" v-if="scope.row.status==2">解除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,6 +106,44 @@
           endTime: this.$transferDate(this.searchData.searchDate[1])
         };
         this.$axios.dopost(url, data).then(res => {
+          res= [
+            {
+              "evaluationId": 8,
+              "image": "[\"1533134158546file\",\"1533134175805file\"]",
+              "waiterStar": 5,
+              "equipmentStar": 2,
+              "createTime": "2018-08-01 22:36:19",
+              "name": "大白菜",
+              "mobile": "17681893248",
+              "message": "123123",
+              "environmentStar": 4,
+              "status": 1
+            },
+            {
+              "evaluationId": 9,
+              "image": "[\"1533135721917file\"]",
+              "waiterStar": 0,
+              "equipmentStar": 2,
+              "createTime": "2018-08-01 23:02:05",
+              "name": "大白菜",
+              "mobile": "17681893248",
+              "message": "3213",
+              "environmentStar": 4,
+              "status": 1
+            },
+            {
+              "evaluationId": 10,
+              "image": "[\"1533136415658file\"]",
+              "waiterStar": 5,
+              "equipmentStar": 3,
+              "createTime": "2018-08-01 23:13:36",
+              "name": "大白菜",
+              "mobile": "17681893248",
+              "message": "3213",
+              "environmentStar": 4,
+              "status": 1
+            }
+          ];
           this.tableData = res;
           this.total = res.length > 0 ? res.length : 1;
         }).catch(e => {
@@ -118,33 +157,19 @@
           "text-align": "center"
         }
       },
-      handleClick(d) {
-        let appointId = d.appointId;
-        let url = '/yijian/opStore/getAppointDetail.do';
-        let data = {appointId};
-        this.$axios.dopost(url, data).then(res => {
-          this.alertData = res;
-          this.centerDialogVisible = true;
-        }).catch(e => {
-          this.$showErrorMessage(this, e);
-        })
-      },
-      submitLeave(d) {
-        this.$confirm('确认该用户已离店吗？', '提示', {
+      handleClick(d, flag) {
+        let evaluationId = d.evaluationId;
+        let status = flag ? 2 : 1;
+        let text = flag ? '确认屏蔽该评论吗？' : '确认解除该条评论的屏蔽吗？';
+        this.$confirm(text, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({value}) => {
-          let url = '/yijian/opStore/finishAppointByStore.do';
-          let appointId = d.appointId;
-          let data = {
-            appointId
-          };
+          let url = '/yijian/opStore/updateStatusByEvaluationId.do';
+          let data = {evaluationId, status};
           this.$axios.dopost(url, data).then(res => {
-            this.$message({
-              type: 'success',
-              message: '操作成功!'
-            });
             this.queryData();
+            this.$message.success('操作成功');
           }).catch(e => {
             this.$showErrorMessage(this, e);
           })
