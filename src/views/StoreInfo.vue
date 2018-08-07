@@ -6,7 +6,7 @@
     <p>
       <el-button type="primary" @click="dialogFormVisible = true">编辑</el-button>
     </p>
-    <el-dialog title="设置抽成比例" :visible.sync="dialogFormVisible">
+    <el-dialog title="设置商家信息" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="商家名称：" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off"></el-input>
