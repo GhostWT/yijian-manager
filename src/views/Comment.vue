@@ -94,7 +94,7 @@
     },
     methods: {
       queryData() {
-        let url = '/yijian/opStore/getAppointList.do';
+        let url = '/yijian/opStore/getEvaluationByStoreId.do';
         let data = {
           storeId: this.storeInfo.storeId,
           mobile: this.searchData.telphone,
