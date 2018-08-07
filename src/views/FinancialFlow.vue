@@ -64,18 +64,18 @@
     },
     methods: {
       queryData() {
-        let url = '/yijian/opRoot/findServiceFlow.do';
+        let url = '/yijian/opStore/getTradingFlow.do';
         let storeId = this.storeInfo.storeId,
           startIndex = this.currentPage == 1 ? 0 : this.currentPage * 10 - 1,
           pageSize = 10,
-          createTimeStart = this.$transferDate(this.searchData.searchDate[0]),
-          createTimeEnd = this.$transferDateAddsuffix(this.searchData.searchDate[1]);
+          startTime = this.$transferDate(this.searchData.searchDate[0]),
+          endTime = this.$transferDateAddsuffix(this.searchData.searchDate[1]);
         let data = {
           storeId,
           startIndex,
           pageSize,
-          createTimeStart,
-          createTimeEnd
+          startTime,
+          endTime
         };
         this.$axios.dopost(url, data).then(res => {
           this.tableData = res.data;
