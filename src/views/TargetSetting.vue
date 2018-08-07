@@ -19,14 +19,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :page-size="10"
-          layout="prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
-      </div>
+      <!--<div class="block">-->
+        <!--<el-pagination-->
+          <!--@current-change="handleCurrentChange"-->
+          <!--:page-size="10"-->
+          <!--layout="prev, pager, next, jumper"-->
+          <!--:total="total">-->
+        <!--</el-pagination>-->
+      <!--</div>-->
     </div>
     <el-dialog title="编辑" :visible.sync="centerDialogVisible" width="30%" center>
       <div class="inner_body">
@@ -69,7 +69,7 @@
         };
         this.$axios.dopost(url, data).then(res => {
           this.tableData = res.data;
-          this.total = res.total;
+          // this.total = res.total;
         }).catch(e => {
           this.$showErrorMessage(this, e);
         })
