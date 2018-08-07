@@ -14,6 +14,7 @@ import QuotaSetting from '@/views/QuotaSetting'
 import Comment from '@/views/Comment'
 import OrderManage from '@/views/OrderManage'
 import FinancialFlow from '@/views/FinancialFlow'
+import TargetSetting from '@/views/TargetSetting'
 
 Vue.use(Router)
 
@@ -59,6 +60,10 @@ export default new Router({
         path: 'quotasetting',
         component: QuotaSetting,
         name: 'quotasetting'
+      }, {
+        path: 'targetsetting',
+        component: TargetSetting,
+        name: 'targetsetting'
       }, {
         path: 'comment',
         component: Comment,

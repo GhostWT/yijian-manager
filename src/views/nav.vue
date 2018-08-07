@@ -16,6 +16,7 @@
             <el-menu-item index="pricemanage">价格管理</el-menu-item>
             <el-menu-item index="timemanage">时间段管理</el-menu-item>
             <el-menu-item index="quotasetting">当日名额设置</el-menu-item>
+            <el-menu-item index="targetsetting">活动目标设置</el-menu-item>
             <el-menu-item index="comment">评论</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
