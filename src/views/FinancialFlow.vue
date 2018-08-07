@@ -29,6 +29,14 @@
         </el-table-column>
         <el-table-column prop="payDate" label="结算时间"></el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :page-size="10"
+          layout="prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
     </div>
 
   </div>
@@ -70,8 +78,8 @@
           createTimeEnd
         };
         this.$axios.dopost(url, data).then(res => {
-          this.tableData = res;
-          this.total = res.length > 0 ? res.length : 1;
+          this.tableData = res.data;
+          this.total = res.total;
         }).catch(e => {
           this.$showErrorMessage(this, e);
         })
@@ -88,7 +96,7 @@
       }
     },
     watch: {
-      currentPage() {
+      currentPage(val) {
         this.queryData();
       }
     }

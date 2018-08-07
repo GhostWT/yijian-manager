@@ -24,6 +24,14 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :page-size="10"
+          layout="prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
     </div>
     <el-dialog title="编辑" :visible.sync="centerDialogVisible" width="40%" center>
       <div class="inner_body">
@@ -64,7 +72,9 @@
         centerDialogVisible: false,
         imageUrl: '',
         realImageUrl: '',
-        message: ''
+        message: '',
+        total:5,
+        currentPage:1
       }
     },
     mounted() {
@@ -78,8 +88,8 @@
           storeId
         };
         this.$axios.dopost(url, data).then(res => {
-          this.tableData = res;
-          this.total = res.length > 0 ? res.length : 1;
+          this.tableData = res.data;
+          this.total = res.total;
         }).catch(e => {
           this.$showErrorMessage(this, e);
         })
@@ -146,6 +156,14 @@
       },
       beforeAvatarUpload(file) {
 
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val;
+      }
+    },
+    watch:{
+      currentPage(val) {
+        this.queryData();
       }
     }
   }
