@@ -103,7 +103,7 @@
           startIndex: this.currentPage == 1 ? 0 : this.currentPage * 10 - 1,
           pageSize: 10,
           startTime: this.$transferDate(this.searchData.searchDate[0]),
-          endTime: this.$transferDate(this.searchData.searchDate[1])
+          endTime: this.$transferDateAddsuffix(this.searchData.searchDate[1])
         };
         this.$axios.dopost(url, data).then(res => {
           this.tableData = res;

@@ -61,7 +61,7 @@
           startIndex = this.currentPage == 1 ? 0 : this.currentPage * 10 - 1,
           pageSize = 10,
           createTimeStart = this.$transferDate(this.searchData.searchDate[0]),
-          createTimeEnd = this.$transferDate(this.searchData.searchDate[1]);
+          createTimeEnd = this.$transferDateAddsuffix(this.searchData.searchDate[1]);
         let data = {
           storeId,
           startIndex,
