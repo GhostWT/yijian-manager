@@ -136,7 +136,7 @@
           mobile: this.searchData.telphone,
           userName: this.searchData.userName,
           status: this.searchData.orderStatus,
-          startIndex: this.currentPage == 1 ? 0 : (this.currentPage-1) * 10 - 1,
+          startIndex: (this.currentPage-1) * 10,
           pageSize: 10,
           requestTimeStart: this.$transferDate(this.searchData.searchDate[0]),
           requestTimeEnd: this.$transferDateAddsuffix(this.searchData.searchDate[1])
