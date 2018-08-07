@@ -108,7 +108,7 @@
           mobile: this.searchData.telphone,
           userName: this.searchData.userName,
           status: this.searchData.status,
-          startIndex: this.currentPage == 1 ? 0 : this.currentPage * 10 - 1,
+          startIndex: this.currentPage == 1 ? 0 : (this.currentPage-1) * 10 - 1,
           pageSize: 10,
           startTime: this.$transferDate(this.searchData.searchDate[0]),
           endTime: this.$transferDateAddsuffix(this.searchData.searchDate[1])
