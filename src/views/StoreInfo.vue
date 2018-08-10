@@ -54,6 +54,7 @@
         };
         this.$axios.dopost(url, data).then(res => {
           this.formData = res;
+          this.form = res;
         }).catch(e => {
           this.$showErrorMessage(this, e);
         })
