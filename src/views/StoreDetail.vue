@@ -1,22 +1,25 @@
 <template>
-  <div class="header">
-    <h3>当前商家详情介绍</h3>
-    <div v-if="!inEdit">
-      <div v-html="storeDetail"></div>
-    </div>
-    <div v-if="inEdit" class="edit_container">
-      <quill-editor v-model="content"
-                    ref="myQuillEditor"
-                    class="editer"
-                    :options="editorOption"
-                    @change="onEditorChange($event)"
-                    @ready="onEditorReady($event)">
-      </quill-editor>
-    </div>
-    <div class="submit_btn">
-      <el-button type="primary" @click="inEdit = false" v-if="inEdit">取消</el-button>
-      <el-button type="primary" @click="submit" v-if="inEdit">保存</el-button>
-      <el-button type="primary" @click="inEdit = true" v-if="!inEdit">编辑</el-button>
+  <div>
+    <headTop></headTop>
+    <div class="header">
+      <h3>当前商家详情介绍</h3>
+      <div v-if="!inEdit">
+        <div v-html="storeDetail"></div>
+      </div>
+      <div v-if="inEdit" class="edit_container">
+        <quill-editor v-model="content"
+                      ref="myQuillEditor"
+                      class="editer"
+                      :options="editorOption"
+                      @change="onEditorChange($event)"
+                      @ready="onEditorReady($event)">
+        </quill-editor>
+      </div>
+      <div class="submit_btn">
+        <el-button type="primary" @click="inEdit = false" v-if="inEdit">取消</el-button>
+        <el-button type="primary" @click="submit" v-if="inEdit">保存</el-button>
+        <el-button type="primary" @click="inEdit = true" v-if="!inEdit">编辑</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -26,6 +29,7 @@
   import 'quill/dist/quill.core.css'
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
+  import headTop from '@/components/HeadTop';
 
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -82,6 +86,7 @@
     },
     components: {
       quillEditor,
+      headTop
     },
     computed: {
       editor() {

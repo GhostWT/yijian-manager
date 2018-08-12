@@ -1,32 +1,37 @@
 <template>
-  <div class="header">
-    <p>商家名称：{{formData.name}} </p>
-    <p>地址：{{formData.address}} </p>
-    <p>电话：{{formData.phone}} </p>
-    <p>
-      <el-button type="primary" @click="dialogFormVisible = true">编辑</el-button>
-    </p>
-    <el-dialog title="设置商家信息" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="商家名称：" :label-width="formLabelWidth">
-          <el-input v-model="form.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="地址：" :label-width="formLabelWidth">
-          <el-input v-model="form.address" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="电话：" :label-width="formLabelWidth">
-          <el-input v-model="form.phone" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleClick">确 定</el-button>
-      </div>
-    </el-dialog>
+  <div>
+    <headTop></headTop>
+    <div class="header">
+      <p>商家名称：{{formData.name}} </p>
+      <p>地址：{{formData.address}} </p>
+      <p>电话：{{formData.phone}} </p>
+      <p>
+        <el-button type="primary" @click="dialogFormVisible = true">编辑</el-button>
+      </p>
+      <el-dialog title="设置商家信息" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="商家名称：" :label-width="formLabelWidth">
+            <el-input v-model="form.name" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="地址：" :label-width="formLabelWidth">
+            <el-input v-model="form.address" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="电话：" :label-width="formLabelWidth">
+            <el-input v-model="form.phone" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleClick">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+  import headTop from '@/components/HeadTop';
+
   export default {
     name: "StoreInfo",
     data() {
@@ -41,6 +46,9 @@
         },
         formLabelWidth: '120px'
       }
+    },
+    components: {
+      headTop
     },
     mounted() {
       this.queryData();

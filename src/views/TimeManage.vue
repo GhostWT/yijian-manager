@@ -1,53 +1,58 @@
 <template>
-  <div class="header">
-    <div v-if="!inEdit">
-      <p>可预约时间段：{{formData | appointFilter}}</p>
-      <p>暂停营业时间：{{formData | stopTimeFilter}}</p>
-      <p>
-        <el-button type="primary" @click="handleClick">编辑</el-button>
-      </p>
-    </div>
-    <div v-if="inEdit">
-      <h3>可预约时间段</h3>
-      <p>
-        <el-select v-model="value1" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        至
-        <el-select v-model="value2" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-time-select placeholder="起始时间" v-model="startTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00'}">
-        </el-time-select>
-        <el-time-select placeholder="结束时间" v-model="endTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00',minTime: startTime}">
-        </el-time-select>
-      </p>
-      <h3>暂停营业</h3>
-      <p>
-        <el-time-select placeholder="起始时间" v-model="stopStartTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00'}">
-        </el-time-select>
-        <el-time-select placeholder="结束时间" v-model="stopEndTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00',minTime: startTime}">
-        </el-time-select>
-      </p>
-      <p>
-        <el-button type="primary" @click="inEdit = false">取消</el-button>
-        <el-button type="primary" @click="submit">保存</el-button>
-      </p>
+  <div>
+    <headTop></headTop>
+    <div class="header">
+      <div v-if="!inEdit">
+        <p>可预约时间段：{{formData | appointFilter}}</p>
+        <p>暂停营业时间：{{formData | stopTimeFilter}}</p>
+        <p>
+          <el-button type="primary" @click="handleClick">编辑</el-button>
+        </p>
+      </div>
+      <div v-if="inEdit">
+        <h3>可预约时间段</h3>
+        <p>
+          <el-select v-model="value1" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          至
+          <el-select v-model="value2" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-time-select placeholder="起始时间" v-model="startTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00'}">
+          </el-time-select>
+          <el-time-select placeholder="结束时间" v-model="endTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00',minTime: startTime}">
+          </el-time-select>
+        </p>
+        <h3>暂停营业</h3>
+        <p>
+          <el-time-select placeholder="起始时间" v-model="stopStartTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00'}">
+          </el-time-select>
+          <el-time-select placeholder="结束时间" v-model="stopEndTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00',minTime: startTime}">
+          </el-time-select>
+        </p>
+        <p>
+          <el-button type="primary" @click="inEdit = false">取消</el-button>
+          <el-button type="primary" @click="submit">保存</el-button>
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import headTop from '@/components/HeadTop';
+
   export default {
     name: "TimeManage",
     data() {
@@ -84,6 +89,9 @@
         value1: 1,
         value2: 7
       }
+    },
+    components: {
+      headTop
     },
     mounted() {
       this.queryData();

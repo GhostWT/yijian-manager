@@ -1,44 +1,49 @@
 <template>
-  <div class="header">
-    <el-table
-      :data="tableData"
-      border
-      :header-cell-style="headerStyle"
-      style="width: 100%;text-align:center">
-      <el-table-column prop="bannerId" label="排序值"></el-table-column>
-      <el-table-column prop="image" label="图片" width="600">
-        <template slot-scope="scope">
-          <img v-bind:src="imgUrl+scope.row.image" class="imageWidth"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button @click="modify(scope.row)" type="text" size="small">编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-dialog title="编辑" :visible.sync="centerDialogVisible" width="40%" center>
-      <div class="inner_body">
-        <span>添加或更换图片：</span>
-        <el-upload
-          class="avatar-uploader"
-          :action="serverUrl"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleClick">确 定</el-button>
-      </div>
-    </el-dialog>
+  <div>
+    <headTop></headTop>
+    <div class="header">
+      <el-table
+        :data="tableData"
+        border
+        :header-cell-style="headerStyle"
+        style="width: 100%;text-align:center">
+        <el-table-column prop="bannerId" label="排序值"></el-table-column>
+        <el-table-column prop="image" label="图片" width="600">
+          <template slot-scope="scope">
+            <img v-bind:src="imgUrl+scope.row.image" class="imageWidth"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="modify(scope.row)" type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-dialog title="编辑" :visible.sync="centerDialogVisible" width="40%" center>
+        <div class="inner_body">
+          <span>添加或更换图片：</span>
+          <el-upload
+            class="avatar-uploader"
+            :action="serverUrl"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="centerDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleClick">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+  import headTop from '@/components/HeadTop';
+
   export default {
     name: "BannerManage",
     data() {
@@ -52,6 +57,9 @@
         centerDialogVisible: false,
         serverUrl: '/yijian/upload'
       }
+    },
+    components: {
+      headTop
     },
     mounted() {
       this.queryData();

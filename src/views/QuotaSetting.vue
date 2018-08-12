@@ -1,13 +1,18 @@
 <template>
-  <div class="header">
-    <p>每日可预约名额：{{num}}个</p>
-    <p>
-      <el-button type="primary" @click="handleClick">编辑</el-button>
-    </p>
+  <div>
+    <headTop></headTop>
+    <div class="header">
+      <p>每日可预约名额：{{num}}个</p>
+      <p>
+        <el-button type="primary" @click="handleClick">编辑</el-button>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+  import headTop from '@/components/HeadTop';
+
   export default {
     name: "QuotaSetting",
     data() {
@@ -15,6 +20,9 @@
         storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         num: 0
       }
+    },
+    components: {
+      headTop
     },
     mounted() {
       this.queryData();

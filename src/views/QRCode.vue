@@ -1,13 +1,17 @@
 <template>
-  <div class="header">
-    <h3>商家二维码</h3>
-    <div id='code'></div>
-    <canvas id="canvas"></canvas>
+  <div>
+    <headTop></headTop>
+    <div class="header">
+      <h3>商家二维码</h3>
+      <div id='code'></div>
+      <canvas id="canvas"></canvas>
+    </div>
   </div>
 </template>
 
 <script>
-  import QRCode from 'qrcode'
+  import QRCode from 'qrcode';
+  import headTop from '@/components/HeadTop';
 
   export default {
     name: "QRCode",
@@ -18,7 +22,8 @@
       }
     },
     components: {
-      QRCode: QRCode
+      QRCode: QRCode,
+      headTop
     },
     methods: {
       useqrcode() {

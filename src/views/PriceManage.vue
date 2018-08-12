@@ -1,43 +1,48 @@
 <template>
-  <div class="header">
-    <div v-if="!inEdit">
-      <h3>当前价格</h3>
-      <p>最低消费：{{formData.minConsumption}}元</p>
-      <p>单价：{{formData.price}}元/30分钟</p>
-      <p>
-        <el-button type="primary" @click="handleClick">编辑</el-button>
-      </p>
-    </div>
-    <div v-if="inEdit">
-      <p>
-        <el-radio v-model="radio" label="1">使用平台计价</el-radio>
-      </p>
-      <p>
-        <el-radio v-model="radio" label="2">使用自定义价格</el-radio>
-      </p>
-      <div v-if="radio == 1">
-        <p>最低消费：{{form.minConsumption}}元</p>
-        <p>单价：{{form.price}}元/30分钟</p>
+  <div>
+    <headTop></headTop>
+    <div class="header">
+      <div v-if="!inEdit">
+        <h3>当前价格</h3>
+        <p>最低消费：{{formData.minConsumption}}元</p>
+        <p>单价：{{formData.price}}元/30分钟</p>
+        <p>
+          <el-button type="primary" @click="handleClick">编辑</el-button>
+        </p>
       </div>
-      <div v-if="radio == 2">
-        <el-form :model="form">
-          <el-form-item label="最低消费：" :label-width="formLabelWidth">
-            <el-input v-model="form.minConsumption" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="单价：" :label-width="formLabelWidth">
-            <el-input v-model="form.price" auto-complete="off"></el-input>
-          </el-form-item>
-        </el-form>
+      <div v-if="inEdit">
+        <p>
+          <el-radio v-model="radio" label="1">使用平台计价</el-radio>
+        </p>
+        <p>
+          <el-radio v-model="radio" label="2">使用自定义价格</el-radio>
+        </p>
+        <div v-if="radio == 1">
+          <p>最低消费：{{form.minConsumption}}元</p>
+          <p>单价：{{form.price}}元/30分钟</p>
+        </div>
+        <div v-if="radio == 2">
+          <el-form :model="form">
+            <el-form-item label="最低消费：" :label-width="formLabelWidth">
+              <el-input v-model="form.minConsumption" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="单价：" :label-width="formLabelWidth">
+              <el-input v-model="form.price" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <p>
+          <el-button type="primary" @click="inEdit = false">取消</el-button>
+          <el-button type="primary" @click="submit">保存</el-button>
+        </p>
       </div>
-      <p>
-        <el-button type="primary" @click="inEdit = false">取消</el-button>
-        <el-button type="primary" @click="submit">保存</el-button>
-      </p>
     </div>
   </div>
 </template>
 
 <script>
+  import headTop from '@/components/HeadTop';
+
   export default {
     name: "PriceManage",
     data() {
@@ -52,6 +57,9 @@
           price: ''
         }
       }
+    },
+    components: {
+      headTop
     },
     mounted() {
       this.queryData();
