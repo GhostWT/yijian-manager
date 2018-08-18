@@ -41,6 +41,7 @@
         };
         this.$axios.dopost(url, data).then(res => {
           this.$store.dispatch('setStoreInfo', JSON.stringify(res));
+          this.$store.dispatch('setMobile', JSON.stringify({mobile: this.username}));
           this.$router.push({
             name: 'bannermanage'
           });

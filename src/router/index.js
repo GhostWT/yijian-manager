@@ -15,6 +15,7 @@ import Comment from '@/views/Comment'
 import OrderManage from '@/views/OrderManage'
 import FinancialFlow from '@/views/FinancialFlow'
 import TargetSetting from '@/views/TargetSetting'
+import ChangePassword from '@/views/ChangePassword'
 
 Vue.use(Router)
 
@@ -76,6 +77,10 @@ export default new Router({
         path: 'financialflow',
         component: FinancialFlow,
         name: 'financialflow'
+      },{
+        path:'changepassword',
+        component:ChangePassword,
+        name:'changepassword',
       }]
     }
   ]

@@ -10,6 +10,7 @@
             <el-menu-item index="equipment">设备展示</el-menu-item>
             <el-menu-item index="storeinfo">商家信息</el-menu-item>
             <el-menu-item index="qrCode">商家二维码</el-menu-item>
+            <el-menu-item index="changepassword">修改密码</el-menu-item>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title"><i class="el-icon-document"></i>运营管理</template>
