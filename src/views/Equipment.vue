@@ -3,7 +3,7 @@
     <headTop></headTop>
     <div class="header-top">
       <el-row>
-        <el-button type="primary" @click="centerDialogVisible = true">新&nbsp;&nbsp;增</el-button>
+        <el-button type="primary" @click="dialogVisible = true">新&nbsp;&nbsp;增</el-button>
       </el-row>
     </div>
     <div class="content">
@@ -13,7 +13,6 @@
         :header-cell-style="headerStyle"
         style="width: 100%;text-align:center">
         <el-table-column prop="equipmentId" label="序号"></el-table-column>
-        <el-table-column prop="message" label="简介"></el-table-column>
         <el-table-column label="图片" width="500">
           <template slot-scope="scope">
             <img :src="imgUrl+scope.row.image" class="imageWidth">
@@ -21,20 +20,13 @@
         </el-table-column>
         <el-table-column prop="" label="操作">
           <template slot-scope="scope">
+            <el-button @click="handleClickChange(scope.row)" type="text" size="small">编辑</el-button>
             <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <!--<div class="block">-->
-        <!--<el-pagination-->
-          <!--@current-change="handleCurrentChange"-->
-          <!--:page-size="10"-->
-          <!--layout="prev, pager, next, jumper"-->
-          <!--:total="total">-->
-        <!--</el-pagination>-->
-      <!--</div>-->
     </div>
-    <el-dialog title="编辑" :visible.sync="centerDialogVisible" width="40%" center>
+    <el-dialog title="编辑" :visible.sync="dialogVisible" width="70%" center>
       <div class="inner_body">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="添加图片：">
@@ -48,21 +40,61 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
-          <el-form-item label="简介：">
-            <el-input v-model="message" placeholder="最多不超过15字"></el-input>
-          </el-form-item>
         </el-form>
+        <div class="editor">
+          <quill-editor v-model="content"
+                        ref="myQuillEditor"
+                        class="editer"
+                        :options="editorOption"
+                        @change="onEditorChange($event)"
+                        @ready="onEditorReady($event)">
+          </quill-editor>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addEquipment">确 定</el-button>
       </div>
     </el-dialog>
+    <el-upload
+      class="avatar-uploader2"
+      :action="serverUrl"
+      :headers="token"
+      :show-file-list="false"
+      :on-success="uploadSuccess"
+      :on-error="uploadError"
+      :before-upload="beforeUpload">
+    </el-upload>
   </div>
 </template>
 
 <script>
   import headTop from '@/components/HeadTop';
+  import {quillEditor} from 'vue-quill-editor'
+  import 'quill/dist/quill.core.css'
+  import 'quill/dist/quill.snow.css'
+  import 'quill/dist/quill.bubble.css'
+
+
+  const toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    ['blockquote', 'code-block'],
+
+    [{'header': 1}, {'header': 2}],               // custom button values
+    [{'list': 'ordered'}, {'list': 'bullet'}],
+    [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+    [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+    [{'direction': 'rtl'}],                         // text direction
+
+    [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+    [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+    [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+    [{'font': []}],
+    [{'align': []}],
+    ['link', 'image', 'video'],
+    ['clean']                                         // remove formatting button
+  ]
 
   export default {
     name: "Equipment",
@@ -72,19 +104,49 @@
         storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         imgUrl: this.$store.getters.getImgUrl,
         serverUrl: '/yijian/upload',
-        centerDialogVisible: false,
+        dialogVisible: false,
         imageUrl: '',
         realImageUrl: '',
+        textImgUrl: '',
+        realTextImgUrl: '',
         message: '',
-        total:5,
-        currentPage:1
+        total: 5,
+        currentPage: 1,
+        quillUpdateImg: false,
+        header: '',
+        token: {token: sessionStorage.token},
+        content: '<h3>文本编辑</h3>',
+        editorOption: {
+          placeholder: '',
+          theme: 'snow',  // or 'bubble'
+          modules: {
+            toolbar: {
+              container: toolbarOptions,  // 工具栏
+              handlers: {
+                'image': function (value) {
+                  if (value) {
+                    document.querySelector('.avatar-uploader2 input').click()
+                  } else {
+                    this.quill.format('image', false);
+                  }
+                }
+              }
+            }
+          }
+        },
       }
     },
     components: {
-      headTop
+      headTop,
+      quillEditor
     },
     mounted() {
       this.queryData();
+    },
+    computed: {
+      editor() {
+        return this.$refs.myQuillEditor.quill
+      }
     },
     methods: {
       queryData() {
@@ -100,26 +162,40 @@
           this.$showErrorMessage(this, e);
         })
       },
+      beforeUpload() {
+        this.quillUpdateImg = true;
+      },
+      uploadSuccess(res, file) {
+        let quill = this.$refs.myQuillEditor.quill
+        if (res.code == '1') {
+          let length = quill.getSelection().index;
+          quill.insertEmbed(length, 'image', this.imgUrl + res.body)
+          quill.setSelection(length + 1)
+        } else {
+          this.$message.error('图片插入失败')
+        }
+        this.quillUpdateImg = false
+      },
+      uploadError() {
+        this.quillUpdateImg = false
+        this.$message.error('图片插入失败')
+      },
+      onEditorReady(editor) {
+      },
+      onEditorChange(d) {
+      },
       addEquipment() {
         let url = '/yijian/opStore/addStoreEquipment.do';
         let storeId = this.storeInfo.storeId;
-        let message = this.message;
+        let message = this.content;
         let image = this.realImageUrl;
-        if (message.length > 15) {
-          this.$message.error('字数不能大于15字');
-          return;
-        }
-        if (image.length < 1) {
-          this.$message.error('请上传设备图片');
-          return;
-        }
         let data = {
           storeId,
           message,
           image
         };
         this.$axios.dopost(url, data).then(res => {
-          this.centerDialogVisible = false;
+          this.dialogVisible = false;
           this.$message.success('新增成功');
           this.queryData();
         }).catch(e => {
@@ -156,6 +232,11 @@
 
         });
       },
+      handleClickChange(d) {
+        this.dialogVisible = true;
+        this.imageUrl = this.imgUrl + d.image;
+        this.content = d.message;
+      },
       handleAvatarSuccess(res, file) {
         this.realImageUrl = res.body;
         this.imageUrl = this.imgUrl + this.realImageUrl;
@@ -167,7 +248,7 @@
         this.currentPage = val;
       }
     },
-    watch:{
+    watch: {
       currentPage(val) {
         this.queryData();
       }
@@ -185,7 +266,7 @@
 
   .el-dialog {
     .inner_body {
-      text-align: center;
+      text-align: left;
       .avatar {
         width: 178px;
       }
@@ -214,6 +295,12 @@
       height: 178px;
       line-height: 178px;
       text-align: center;
+    }
+    .editor {
+      height: 300px;
+      .editer {
+        height: 250px;
+      }
     }
   }
 </style>
