@@ -235,6 +235,7 @@
       handleClickChange(d) {
         this.dialogVisible = true;
         this.imageUrl = this.imgUrl + d.image;
+        this.realImageUrl = d.image;
         this.content = d.message;
       },
       handleAvatarSuccess(res, file) {
