@@ -100,6 +100,8 @@
     name: "Equipment",
     data() {
       return {
+        modify: false,
+        equipmentId: 0,
         tableData: [],
         storeInfo: JSON.parse(this.$store.getters.getStoreInfo),
         imgUrl: this.$store.getters.getImgUrl,
@@ -150,6 +152,7 @@
     },
     methods: {
       queryData() {
+        this.modify = false;
         let url = "/yijian/opStore/getStoreEquipMent.do";
         let storeId = this.storeInfo.storeId;
         let data = {
@@ -185,22 +188,44 @@
       onEditorChange(d) {
       },
       addEquipment() {
-        let url = '/yijian/opStore/addStoreEquipment.do';
-        let storeId = this.storeInfo.storeId;
-        let message = this.content;
-        let image = this.realImageUrl;
-        let data = {
-          storeId,
-          message,
-          image
-        };
-        this.$axios.dopost(url, data).then(res => {
-          this.dialogVisible = false;
-          this.$message.success('新增成功');
-          this.queryData();
-        }).catch(e => {
-          this.$showErrorMessage(this, e);
-        })
+        // updateStoreEquipment.do
+        if (this.modify) {
+          let url = '/yijian/opStore/updateStoreEquipment.do';
+          let equipmentId=this.equipmentId;
+          let storeId = this.storeInfo.storeId;
+          let message = this.content;
+          let image = this.realImageUrl;
+          let data = {
+            equipmentId,
+            storeId,
+            message,
+            image
+          };
+          this.$axios.dopost(url, data).then(res => {
+            this.dialogVisible = false;
+            this.$message.success('修改成功');
+            this.queryData();
+          }).catch(e => {
+            this.$showErrorMessage(this, e);
+          })
+        } else {
+          let url = '/yijian/opStore/addStoreEquipment.do';
+          let storeId = this.storeInfo.storeId;
+          let message = this.content;
+          let image = this.realImageUrl;
+          let data = {
+            storeId,
+            message,
+            image
+          };
+          this.$axios.dopost(url, data).then(res => {
+            this.dialogVisible = false;
+            this.$message.success('新增成功');
+            this.queryData();
+          }).catch(e => {
+            this.$showErrorMessage(this, e);
+          })
+        }
       },
       headerStyle: function () {
         return {
@@ -210,6 +235,7 @@
         }
       },
       handleClick(d) {
+        alert(this.modify);
         let equipmentId = d.equipmentId;
         this.$confirm('确认删除该设备吗?', '提示', {
           confirmButtonText: '确定',
@@ -233,10 +259,12 @@
         });
       },
       handleClickChange(d) {
+        this.modify = true;
         this.dialogVisible = true;
         this.imageUrl = this.imgUrl + d.image;
         this.realImageUrl = d.image;
         this.content = d.message;
+        this.equipmentId = d.equipmentId;
       },
       handleAvatarSuccess(res, file) {
         this.realImageUrl = res.body;
@@ -252,6 +280,11 @@
     watch: {
       currentPage(val) {
         this.queryData();
+      },
+      dialogVisible(val) {
+        if (!val) {
+          this.modify = false;
+        }
       }
     }
   }
