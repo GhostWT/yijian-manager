@@ -79,9 +79,9 @@
         searchData: {
           telphone: '',
           userName: '',
-          status: 9,
+          status: 0,
           statusList: [{
-            key: 9,
+            key: 0,
             value: '全部'
           }, {
             key: 1,
