@@ -72,12 +72,20 @@
         let storeId = this.storeInfo.storeId,
           name = this.form.name,
           address = this.form.address,
-          phone = this.form.phone;
+          phone = this.form.phone,
+          adcode = this.form.adcode,
+          citycode = this.form.citycode,
+          latitude = this.form.latitude,
+          longitude = this.form.longitude;
         let data = {
           storeId,
           name,
           address,
-          phone
+          phone,
+          adcode,
+          citycode,
+          latitude,
+          longitude
         };
         this.$axios.dopost(url, data).then(res => {
           this.queryData();
