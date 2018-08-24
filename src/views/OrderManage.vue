@@ -143,8 +143,8 @@
           status: this.searchData.orderStatus,
           startIndex: (this.currentPage-1) * 10,
           pageSize: 10,
-          requestTimeStart: this.$transferDate(this.searchData.searchDate[0]),
-          requestTimeEnd: this.$transferDateAddsuffix(this.searchData.searchDate[1])
+          startTime: this.$transferDate(this.searchData.searchDate[0]),
+          endTime: this.$transferDateAddsuffix(this.searchData.searchDate[1])
         };
         this.$axios.dopost(url, data).then(res => {
           this.tableData = res.data;
