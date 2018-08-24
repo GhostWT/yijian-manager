@@ -92,6 +92,19 @@
         let storeId = this.storeInfo.storeId,
           price = +this.form.price,
           minConsumption = +this.form.minConsumption;
+        if (isNaN(price) || isNaN(minConsumption)) {
+          this.$message.error("请输入数字");
+          return false;
+        }
+        if (price < 0 || minConsumption < 0) {
+          this.$message.error("请输入正数");
+          return false;
+        }
+        if (price - parseInt(price) != 0 || minConsumption - parseInt(minConsumption) != 0) {
+          this.$message.error("请输入整数");
+          return false;
+        }
+
         let data = {
           storeId,
           price,
