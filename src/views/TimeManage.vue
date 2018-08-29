@@ -36,10 +36,14 @@
         </p>
         <h3>暂停营业</h3>
         <p>
-          <el-time-select placeholder="起始时间" v-model="stopStartTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00'}">
-          </el-time-select>
-          <el-time-select placeholder="结束时间" v-model="stopEndTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00',minTime: startTime}">
-          </el-time-select>
+          <el-date-picker v-model="stopStartTime" type="date" :picker-options="stopStartTimeOpt" placeholder="选择日期">
+          </el-date-picker>
+          <el-date-picker v-model="stopEndTime" type="date" :picker-options="stopEndTimeOpt" placeholder="选择日期">
+          </el-date-picker>
+          <!--<el-time-select placeholder="起始时间" v-model="stopStartTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00'}">-->
+          <!--</el-time-select>-->
+          <!--<el-time-select placeholder="结束时间" v-model="stopEndTime" :picker-options="{start: '00:00',step: '01:00',end: '23:00',minTime: startTime}">-->
+          <!--</el-time-select>-->
         </p>
         <p>
           <el-button type="primary" @click="inEdit = false">取消</el-button>
@@ -62,8 +66,18 @@
         formData: {},
         startTime: '',
         endTime: '',
-        stopStartTime: '00:00',
-        stopEndTime: '00:00',
+        stopStartTime: this.timeDefaultShow(1),
+        stopEndTime: this.timeDefaultShow(2),
+        stopStartTimeOpt: {
+          disabledDate: (time) => {
+            return time.getTime() < (new Date(this.timeDefaultShow(0))).getTime();
+          }
+        },
+        stopEndTimeOpt: {
+          disabledDate: (time) => {
+            return time.getTime() < (new Date(this.timeDefaultShow(2))).getTime();
+          }
+        },
         options: [{
           value: 1,
           label: '周一'
@@ -109,6 +123,20 @@
           this.$showErrorMessage(this, e);
         })
       },
+      timeDefaultShow(val) {
+        var date = new Date(),
+          Y = date.getFullYear(),
+          m = date.getMonth() + 1,
+          d = date.getDate() + val;
+        if (m < 10) {
+          m = '0' + m;
+        }
+        if (d < 10) {
+          d = '0' + d;
+        }
+        var t = Y + '-' + m + '-' + d;
+        return t;
+      },
       handleClick() {
         this.inEdit = true;
       },
@@ -119,8 +147,8 @@
           appointEndTime = this.endTime,
           weekStart = this.value1,
           weekEnd = this.value2,
-          stopTimeStart = this.stopStartTime,
-          stopTimeEnd = this.stopEndTime;
+          stopTimeStart = this.$transferDate(this.stopStartTime),
+          stopTimeEnd = this.$transferDate(this.stopEndTime);
         let data = {
           storeId,
           appointStartTime,

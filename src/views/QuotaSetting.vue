@@ -49,6 +49,14 @@
             storeId: this.storeInfo.storeId,
             appointNum: +value
           };
+          if (!data.appointNum || isNaN(data.appointNum) || data.appointNum < 0) {
+            this.$message.error("请输入数字")
+            return false;
+          }
+          if (+data.appointNum - parseInt(data.appointNum) > 0) {
+            this.$message.error("请输入整数");
+            return false;
+          }
           this.$axios.dopost(url, data).then(res => {
             this.queryData();
             this.$message.success('修改成功');
