@@ -77,6 +77,10 @@
           citycode = this.form.citycode,
           latitude = this.form.latitude,
           longitude = this.form.longitude;
+        if (!this.checkPhoneNumber(phone)) {
+          this.$message.error("请输入正确的手机号");
+          return false;
+        }
         let data = {
           storeId,
           name,
@@ -94,6 +98,12 @@
         }).catch(e => {
           this.$showErrorMessage(this, e);
         })
+      },
+      checkPhoneNumber(phone) {
+        if (!(/^1[34578]\d{9}$/.test(phone))) {
+          return false;
+        }
+        return true;
       }
     }
   }
