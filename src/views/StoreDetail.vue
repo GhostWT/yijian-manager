@@ -21,6 +21,15 @@
         <el-button type="primary" @click="inEdit = true" v-if="!inEdit">编辑</el-button>
       </div>
     </div>
+    <el-upload
+      class="avatar-uploader"
+      :action="serverUrl"
+      :headers="token"
+      :show-file-list="false"
+      :on-success="uploadSuccess"
+      :on-error="uploadError"
+      :before-upload="beforeUpload">
+    </el-upload>
   </div>
 </template>
 
