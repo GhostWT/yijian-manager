@@ -84,7 +84,7 @@ Vue.prototype.$getBeforeDays = (n) => {
 
 Vue.prototype.$transferDate = (date) => {
   if (!date) {
-    return;
+    return "";
   }
   let d = new Date(date);
   let res = d.getFullYear() + '-' + ((d.getMonth() + 1) < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + '-' + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate());
@@ -93,7 +93,7 @@ Vue.prototype.$transferDate = (date) => {
 
 Vue.prototype.$transferDateAddsuffix = (date) => {
   if (!date) {
-    return;
+    return "";
   }
   let d = new Date(date);
   let res = d.getFullYear() + '-' + ((d.getMonth() + 1) < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + '-' + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + ' 23:59:59';
