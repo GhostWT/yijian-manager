@@ -122,8 +122,11 @@ Vue.filter('timeFilter', function ([a, b, c]) {
 })
 
 Vue.prototype.getImgHtml = function ([images, url]) {
-  let imgArr = JSON.parse(images);
+  let imgArr = (images || '').split(',');
   let html = '';
+  if (imgArr.length < 1) {
+    return "";
+  }
   for (let i = 0; i < imgArr.length; i++) {
     html += '<img src=\'' + url + imgArr[i] + '\'' + ' style=\'width:50px;margin-left: 10px;\' >';
   }
